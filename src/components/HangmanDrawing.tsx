@@ -10,7 +10,6 @@ type numberOfIncorrectGuessesProp = {
 }
 
 const HangmanDrawing = ({ numberOfIncorrectGuesses }: numberOfIncorrectGuessesProp) => {
-  console.log(numberOfIncorrectGuesses)
   return (
       <div style={{ position: "relative" }}>
       {numberOfIncorrectGuesses > 0 ? <Head /> : <></>}

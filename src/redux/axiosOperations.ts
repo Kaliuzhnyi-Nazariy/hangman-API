@@ -4,19 +4,27 @@ const api = axios.create({
   baseURL: "https://www.wordgamedb.com/api/v1",
 });
 
-interface Categories {
-  [category: number]: string;
+export interface Categories {
+  category: string;
 }
 
-interface RandomWord {
-  word: object;
+export interface RandomWord {
+  word: string;
+  hint: string;
+  category: string;
 }
 
 interface WordByTopic {
   word: string;
+  hint: string;
+  category: string;
 }
 
-export const receiveCategories = async (): Promise<Categories[]> => {
+export const receiveCategories = createAsyncThunk<
+  Categories[],
+  void,
+  { rejectValue: string }
+>("categories/receiveCategories", async (): Promise<Categories[]> => {
   try {
     const res = await api.get<Categories[]>("/categories");
     return res.data;
@@ -24,7 +32,7 @@ export const receiveCategories = async (): Promise<Categories[]> => {
     console.log("Error in utils/receiveCategories: ", error);
     throw error;
   }
-};
+});
 
 export const getRandomWord = createAsyncThunk<
   RandomWord,
@@ -33,7 +41,6 @@ export const getRandomWord = createAsyncThunk<
 >("game/randomWord", async (): Promise<RandomWord> => {
   try {
     const res = await api.get<RandomWord>("words/random");
-    console.log(res.data);
     return res.data;
   } catch (error) {
     console.log("Error in utils/receiveCategories: ", error);
@@ -41,26 +48,17 @@ export const getRandomWord = createAsyncThunk<
   }
 });
 
-// export const getWordByTopic2 = async (topic: string): Promise<RandomWord> => {
-//   try {
-//     const res = await api.get<RandomWord>(`words?category=${topic}`);
-//     // console.log(res.data);
-//     return res.data;
-//   } catch (error) {
-//     console.log("error in utils/getWordByTopic: ", error);
-//     return <RandomWord>{};
-//   }
-// };
-
-export const getWordByTopic = createAsyncThunk(
-  "game/byCategory",
-  async (topic: string): Promise<WordByTopic> => {
-    try {
-      const res = await api.get<WordByTopic>(`words?category=${topic}`);
-      return res.data[Math.floor(Math.random() * res.data.length)];
-    } catch (error) {
-      console.log("error in utils/getWordByTopic: ", error);
-      return <WordByTopic>{};
-    }
+export const getWordByTopic = createAsyncThunk<
+  WordByTopic,
+  string,
+  { rejectValue: string }
+>("game/byCategory", async (topic: string): Promise<WordByTopic> => {
+  try {
+    const res = await api.get<WordByTopic[]>(`words?category=${topic}`);
+    const randomData = Math.floor(Math.random() * res.data.length);
+    return res.data[randomData];
+  } catch (error) {
+    console.log("error in utils/getWordByTopic: ", error);
+    return <WordByTopic>{};
   }
-);
+});
