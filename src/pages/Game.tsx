@@ -1,84 +1,100 @@
-import { useSelector } from "react-redux"
-import { selectCategory, selectHint, selectWord } from "../redux/selectors"
-import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import Button from "../components/Button"
-import { getWordByTopic } from "../redux/axiosOperations"
-import HangmanDrawing from "../components/HangmanDrawing"
-import HangmanWord from "../components/HangmanWord"
-import Keybord from "../components/Keybord"
+import { useSelector } from "react-redux";
+import { selectCategory, selectWord } from "../redux/selectors";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getWordByTopic } from "../redux/axiosOperations";
+import HangmanDrawing from "../components/HangmanDrawing";
+import HangmanWord from "../components/HangmanWord";
+import Keybord from "../components/Keybord";
+import Tooltip from "../components/tooltip";
+import Button from "../components/Button/Button";
 
 const Game = () => {
-    const word = useSelector(selectWord)
-    const hint = useSelector(selectHint)
-    const [category] = useState(useSelector(selectCategory))
+  const word = useSelector(selectWord);
+  const [category] = useState(useSelector(selectCategory));
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    
-  const [guessedLetters, setGuessedLetters] = useState<string[]>([])
-  
-  const incorrectGuesses = guessedLetters.filter(letter => !word.includes(letter))
+  const dispatch = useDispatch();
 
-  const isLoser = incorrectGuesses.length >= 6
-    const isWinner = word.split("").every(letter => guessedLetters.includes(letter));
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+
+  const incorrectGuesses = guessedLetters.filter(
+    (letter) => !word.includes(letter)
+  );
+
+  const isLoser = incorrectGuesses.length >= 6;
+  const isWinner = word
+    .split("")
+    .every((letter) => guessedLetters.includes(letter));
 
   const addGuessLetter = (letter: string) => {
-      if (guessedLetters.includes(letter) || isLoser || isWinner) return
-    
-    setGuessedLetters(currentLetters => [...currentLetters, letter])}
+    if (guessedLetters.includes(letter) || isLoser || isWinner) return;
+
+    setGuessedLetters((currentLetters) => [...currentLetters, letter]);
+  };
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const key = e.key
+      const key = e.key;
 
-      if (!key.match(/[a-z]$/)) return
-      
-      e.preventDefault()
-      addGuessLetter(key)
-    }
+      if (!key.match(/[a-z]$/)) return;
 
-      document.addEventListener("keypress", handler)
-      
+      e.preventDefault();
+      addGuessLetter(key);
+    };
+
+    document.addEventListener("keypress", handler);
+
     return () => {
-      document.removeEventListener("keypress", handler)
-    }
-    
-  }, [guessedLetters, isLoser, isWinner])
+      document.removeEventListener("keypress", handler);
+    };
+  }, [guessedLetters, isLoser, isWinner]);
 
-    const handleBackClick = () => {
-    navigate("/")
-    }
-    
-    const restartGame = () => {
-        dispatch(getWordByTopic(category))
-        setGuessedLetters([])
-    }
+  const restartGame = () => {
+    dispatch(getWordByTopic(category));
+    setGuessedLetters([]);
+  };
 
+  return (
+    <>
+      <div
+        style={{
+          maxWidth: "800px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "2rem",
+          margin: "0 auto",
+          alignItems: "center",
+        }}
+      >
+        <Tooltip numberOfIncorrectGuesses={incorrectGuesses.length} />
+        <div style={{ fontSize: "2rem", textAlign: "center" }}>
+          {isWinner ? "You won!" : ""}
+          {isLoser ? "You Lost!" : ""}
+        </div>
+        <HangmanDrawing numberOfIncorrectGuesses={incorrectGuesses.length} />
+        <HangmanWord
+          reveal={isLoser}
+          wordToGuess={word}
+          guessedLetters={guessedLetters}
+        />
+        <div style={{ alignSelf: "stretch" }}>
+          <Keybord
+            activeLetters={guessedLetters.filter((letter) =>
+              word.includes(letter)
+            )}
+            inActiveLetters={incorrectGuesses}
+            addGuessedLetter={addGuessLetter}
+            disabled={isLoser || isWinner}
+          />
+        </div>
+        {isWinner || isLoser ? (
+          <Button onClick={restartGame}>Restart</Button>
+        ) : (
+          <></>
+        )}
+      </div>
+    </>
+  );
+};
 
-    return (
-        <><button onClick={handleBackClick}>back</button><p>game</p><span>{hint}</span><p>{word}</p> <p>{category}</p><Button onClick={restartGame}>Restart</Button>
-        
-        <div style={{
-    maxWidth: "800px", display: "flex", flexDirection: "column", gap: "2rem", margin: "0 auto",
-    alignItems: "center"
-  }}>
-    <div style={{ fontSize: "2rem", textAlign: "center" }}>
-      { isWinner ? "You won! Refresh to start again!" : ""}
-      { isLoser ? "You Lost! Refresh to start again!" : ""}
-  </div>
-    <HangmanDrawing numberOfIncorrectGuesses={ incorrectGuesses.length } />
-    <HangmanWord reveal={isLoser} wordToGuess={ word} guessedLetters={guessedLetters} />
-    <div style={{ alignSelf: "stretch" }}>
-      <Keybord activeLetters={guessedLetters.filter(letter => word.includes(letter))} inActiveLetters={incorrectGuesses} addGuessedLetter={addGuessLetter} disabled={isLoser || isWinner } />
-                </div>
-                { isWinner || isLoser ? <button onClick={restartGame}>Restart</button>: <></>}
-  </div>
-            
-        </>
-
-  )
-}
-
-export default Game
+export default Game;

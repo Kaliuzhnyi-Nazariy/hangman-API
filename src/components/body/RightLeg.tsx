@@ -1,8 +1,7 @@
+import { RightLegDrawing } from "./RightLegStyle";
 
 const RightLeg = () => {
-  return (
-    <div style={{width: "80px", height: "10px", background: "black",position: "absolute",top: "264px", right: "-15px", rotate: "-60deg"}}></div>
-  )
-}
+  return <RightLegDrawing></RightLegDrawing>;
+};
 
-export default RightLeg
+export default RightLeg;

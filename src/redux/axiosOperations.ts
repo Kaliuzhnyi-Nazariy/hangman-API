@@ -4,9 +4,7 @@ const api = axios.create({
   baseURL: "https://www.wordgamedb.com/api/v1",
 });
 
-export interface Categories {
-  category: string;
-}
+export type Categories = string[];
 
 export interface RandomWord {
   word: string;
@@ -21,12 +19,12 @@ interface WordByTopic {
 }
 
 export const receiveCategories = createAsyncThunk<
-  Categories[],
+  Categories,
   void,
   { rejectValue: string }
->("categories/receiveCategories", async (): Promise<Categories[]> => {
+>("categories/receiveCategories", async (): Promise<Categories> => {
   try {
-    const res = await api.get<Categories[]>("/categories");
+    const res = await api.get<Categories>("/categories");
     return res.data;
   } catch (error) {
     console.log("Error in utils/receiveCategories: ", error);

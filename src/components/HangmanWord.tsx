@@ -1,3 +1,5 @@
+import { HangmanWordStyle } from "./HangmanStyle"
+
 type HangmanWordProp = {
   guessedLetters: string[]
   wordToGuess: string
@@ -7,7 +9,7 @@ type HangmanWordProp = {
 
 const HangmanWord = ({guessedLetters, wordToGuess, reveal = false}:HangmanWordProp) => {
   return (
-    <div style={{ display: "flex", gap: ".25em", fontSize: "6rem", fontWeight: "bold", textTransform: "uppercase", fontFamily: "monospace" }}>
+    <HangmanWordStyle>
       {wordToGuess.split("").map((letter, index) => <span style={{ borderBottom: ".1em solid black" }} key={index}>
         <span style={{ visibility: 
         guessedLetters.includes(letter) || reveal
@@ -18,7 +20,7 @@ const HangmanWord = ({guessedLetters, wordToGuess, reveal = false}:HangmanWordPr
         }}
         >{letter}</span>
       </span>)}
-    </div>
+    </HangmanWordStyle>
   )
 }
 

@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { receiveCategories } from "./axiosOperations";
+import { Categories, receiveCategories } from "./axiosOperations";
 
 export interface ITopicState {
-  topics: string[];
+  topics: Categories;
   isLoading: boolean;
 }
 
