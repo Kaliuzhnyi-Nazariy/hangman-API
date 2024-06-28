@@ -63,7 +63,6 @@ const Home: React.FC = () => {
           <p>Loading</p>
         ) : (
           <ListOfButtons>
-            {" "}
             {topics.map((topic: string) => (
               <Button key={topic} onClick={handleTopicClick}>
                 {topic}

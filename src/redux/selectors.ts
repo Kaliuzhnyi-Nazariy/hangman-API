@@ -6,5 +6,6 @@ export const selectCategory = (state: { game: { category: string } }) =>
   state.game.category;
 export const selectIsLoading = (state: { game: { isLoading: boolean } }) =>
   state.game.isLoading;
-export const selectTopics = (state: { categories: { topics: string } }) =>
-  state.categories.topics;
+export const selectTopics = (state: {
+  categories: { topics: Array<string> };
+}) => state.categories.topics;

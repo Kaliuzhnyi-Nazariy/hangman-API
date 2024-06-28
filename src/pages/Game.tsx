@@ -1,19 +1,19 @@
 import { useSelector } from "react-redux";
 import { selectCategory, selectWord } from "../redux/selectors";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { getWordByTopic } from "../redux/axiosOperations";
 import HangmanDrawing from "../components/HangmanDrawing";
 import HangmanWord from "../components/HangmanWord";
 import Keybord from "../components/Keybord";
 import Tooltip from "../components/tooltip";
 import Button from "../components/Button/Button";
+import { useAppDispatch } from "../utils/hooks";
 
 const Game = () => {
   const word = useSelector(selectWord);
   const [category] = useState(useSelector(selectCategory));
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
 
@@ -49,9 +49,13 @@ const Game = () => {
     };
   }, [guessedLetters, isLoser, isWinner]);
 
-  const restartGame = () => {
-    dispatch(getWordByTopic(category));
-    setGuessedLetters([]);
+  const restartGame = async (): Promise<void> => {
+    try {
+      dispatch(getWordByTopic(category));
+      setGuessedLetters([]);
+    } catch (error) {
+      console.error("Error fetching words by topic:", error);
+    }
   };
 
   return (
