@@ -1,7 +1,7 @@
 {
   "name": "hangman",
   "private": true,
-  "homepage": "https://github.com/Kaliuzhnyi-Nazariy/hangman-API",
+  "homepage": "https://github.com/Kaliuzhnyi-Nazariy/hangman-API/",
   "version": "0.1.0",
   "type": "module",
   "scripts": {
