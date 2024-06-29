@@ -4,4 +4,9 @@ import react from "@vitejs/plugin-react"; // Adjust if you're using a different 
 export default defineConfig({
   plugins: [react()],
   base: "/hangman-API/",
+  server: {
+    headers: {
+      "Permissions-Policy": "interest-cohort=()",
+    },
+  },
 });
