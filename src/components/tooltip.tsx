@@ -29,7 +29,7 @@ const Tooltip = ({ numberOfIncorrectGuesses }: PropType) => {
         // padding: "0 5rem "
       }}
     >
-      <Button style={{ marginLeft: "32px" }} onClick={handleBackClick}>
+      <Button style={{ marginLeft: "8px" }} onClick={handleBackClick}>
         back
       </Button>
       {numberOfIncorrectGuesses >= 5 ? (
