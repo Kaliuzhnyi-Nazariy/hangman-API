@@ -1,8 +1,7 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react"; // Adjust if you're using a different framework
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: "/hangman-API/",
   plugins: [react()],
+  base: "/hangman-API/",
 });
